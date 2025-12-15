@@ -1,0 +1,90 @@
+from metro_paris.database.DB_connect import DBConnect
+from metro_paris.model.connessione import Connessione
+from metro_paris.model.fermata import Fermata
+
+
+class DAO():
+    pass
+
+    @staticmethod
+    def readAllFermate():
+        conn = DBConnect.get_connection()
+        result = []
+        query = "SELECT * FROM Fermata"
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(query)
+        for row in cursor:
+            fermata = Fermata(row["id_fermata"], row["nome"], row["coordX"], row["coordY"] )
+            result.append(fermata)
+        cursor.close()
+        conn.close()
+        return result # Restituisco lista di oggetti Fermata (DTO)
+
+    @staticmethod
+    def existsConnessioneTra(u : Fermata, v : Fermata):
+        # Verifica se esista una connessione tra nodo u e v
+        conn = DBConnect.get_connection()
+        result = []
+        query = "SELECT * FROM connessione c  WHERE c.id_stazP = %s AND c.id_stazA = %s"
+
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(query, (u.id_fermata, v.id_fermata) ) # Parametri
+        for row in cursor:
+            result.append(row)
+            print(row)
+        cursor.close()
+        conn.close()
+        return result
+
+
+    @staticmethod
+    def searchViciniAFermata(u : Fermata):
+        # Cerco le fermate collegate a quella passata come parametro
+        conn = DBConnect.get_connection()
+        result = []
+        query = "SELECT * FROM connessione c  WHERE c.id_stazP = %s"
+
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(query, (u.id_fermata, ) ) # Parametro con (, )
+        for row in cursor:
+            connessione = Connessione(row["id_connessione"],
+                                      row["id_linea"],
+                                      row["id_stazP"],
+                                      row["id_stazA"])
+            result.append(connessione)
+            print(row)
+        cursor.close()
+        conn.close()
+        return result
+
+    @staticmethod
+    def readAllConnessioni():
+        conn = DBConnect.get_connection()
+        result = []
+        query = "SELECT * FROM connessione"
+
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(query)  # Parametro con (, )
+        for row in cursor:
+            connessione = Connessione(row["id_connessione"],
+                                      row["id_linea"],
+                                      row["id_stazP"],
+                                      row["id_stazA"])
+            result.append(connessione)
+            print(row)
+        cursor.close()
+        conn.close()
+        return result
+
+    @staticmethod
+    def readVelocita(id_linea):
+        conn = DBConnect.get_connection()
+        result = []
+        query = "SELECT * FROM linea WHERE id_linea = %s"
+        cursor = conn.cursor(dictionary=True)
+        cursor.execute(query, (id_linea, ))
+        for row in cursor:
+            result.append(row["velocita"])
+        cursor.close()
+        conn.close()
+        return result[0] # La prima riga contiene la velocità letta
