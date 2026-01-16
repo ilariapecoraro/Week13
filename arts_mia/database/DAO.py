@@ -22,6 +22,13 @@ class DAO:
         conn.close()
         return result
 
+    # query + complicata:
+    # l'obbiettivo è tirare fuori da due exhibit se gli oggetti sono stati esposti
+    # per togliere lo stesso oggetto != , per evitare anche che vengano ripetute le coppie
+    # metto < / >
+    # per contare raggruppo e conto
+
+
     @staticmethod
     def readConnessioni(objects_dict): # Riceve la idMap degli Object
         conn = DBConnect.get_connection()
@@ -34,6 +41,7 @@ class DAO:
                     GROUP BY eo1.object_id, eo2.object_id"""
         cursor.execute(query)
 
+        # creiamo degli oggetti connessione
         for row in cursor:
            o1 = objects_dict[row["o1"]]
            o2 = objects_dict[row["o2"]]

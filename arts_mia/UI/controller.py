@@ -12,6 +12,8 @@ class Controller:
         self._model.buildGrafo() # grafo costruito nel model
         self._view.txt_result.controls.clear()
         self._view.txt_result.controls.append(ft.Text(f"{self._model._grafo}"))
+        self._view.btnCompConnessa.disabled = False # il bottone viene abilitato
+        self._view.btnCercaOggetti.disabled = False
         self._view.update_page()
 
     def handleCompConnessa(self,e):
@@ -24,6 +26,9 @@ class Controller:
             self._view.txt_result.controls.clear()
             self._view.txt_result.controls.append(
                 ft.Text(f"Dim. componente connessa: {numNodi}"))
+            # Qui posso popolare la dropdown _ddLunghezza
+            for i in range(2, numNodi):
+                self._view.ddLunghezza.options.append(ft.dropdown.Option(f"{i}"))
             self._view.update_page()
 
 
@@ -32,3 +37,11 @@ class Controller:
             self._view.txt_result.controls.append(ft.Text("Inserisci un id valido"))
             self._view.update_page()
 
+    def handleCercaOggetti(self,e):
+
+        lunghezza = int(self._view._ddLunghezza.value)
+        id_oggetto = int(self._view._txtIdOggetto.value)
+        print(f"{id_oggetto}")
+        print(f"{lunghezza}")
+        percorsoMigliore, pesoMigliore= self._model.getPercorsoMassimo(id_oggetto, lunghezza)
+        print("Finito")

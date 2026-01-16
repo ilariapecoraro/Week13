@@ -40,10 +40,13 @@ class View():
         self._btnCrea = ft.ElevatedButton(text="Crea Grafo", on_click=self._controller.handleCreaGrafo)
         self._ddStazPartenza = ft.Dropdown(label="Stazione di Partenza", width=250 )
         self._ddStazArrivo = ft.Dropdown(label="Stazione di Arrivo", width=250)
-        self._btnCalcola = ft.ElevatedButton(text="Calcola Raggiungibili", on_click=self._controller.handleCercaRaggiungibili)
+        self._btnCalcola = ft.ElevatedButton(text="Calcola Raggiungibili",disabled = True, on_click=self._controller.handleCercaRaggiungibili)
+        # se i pulsanti sono disabilitati non si possono premere
 
         self._controller.populate_dropdown(self._ddStazPartenza)
         self._controller.populate_dropdown(self._ddStazArrivo)
+
+        self._btn_percorso_mnimo = ft.ElevatedButton(text = "Percorso minimo" ,disabled = True, on_click = self._controller.handlePercorsoMinimo)
 
 
         row2 = ft.Row([self._btnCrea,

@@ -18,6 +18,17 @@ class Model:
             visited_nodes.append(v)
         return visited_nodes
 
+    def getPercorsoMinimo(self, idStazPartenza, idStazArrivo):
+        v_sorce = self._dizionario_fermate[idStazPartenza]
+        v_target = self._dizionario_fermate[idStazArrivo]
+
+        # uso dijkstra che mi restituisce un percorso come lista di nodi
+        costo, percorso = nx.single_source_dijkstra(self._grafo, v_sorce, v_target, weight = "tempo")
+        # noi abbiamo chiamato il peso "tempo", se non lo specifichiamo da tutto 1 e non va bene
+
+        return costo, percorso
+
+
 
     def getAllFermate(self):
         fermate = DAO.readAllFermate()
@@ -33,6 +44,7 @@ class Model:
         self._grafo = nx.DiGraph()  # Senza archi multipli tra due nodi
         for fermata in self._lista_fermate:
             self._grafo.add_node(fermata)
+
         # PRIMO MODO DI AGGIUNGERE GLI ARCHI, CON 619*619 QUERY SQL
         """
         for u in self._grafo: # Per ognuno dei 619 nodi
@@ -113,5 +125,3 @@ class Model:
                 self._grafo.add_edge(u_nodo, v_nodo, tempo=tempo_perc)
 
         print(self._grafo)
-
-
